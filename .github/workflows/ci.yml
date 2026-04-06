@@ -25,6 +25,14 @@ jobs:
     steps:
       - name: Noop
         run: "true"
+      - name: Fetch rate_limit JSON
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -s -H "Authorization: token $GITHUB_TOKEN" \
+                   -H "Accept: application/vnd.github+json" \
+                   https://api.github.com/rate_limit \
+            | jq .
   ci:
     name: (${{ matrix.name }}) CI
     needs: org-check
@@ -103,6 +111,7 @@ jobs:
           # final PEX content.
           #
           cargo run -p package -- test --check --tools-pex-mismatch-warn
+
       - name: Build, Package & Integration Tests (Ubuntu)
         if: ${{ matrix.os == 'ubuntu-22.04' || matrix.name == 'ubuntu-22.04-arm' }}
         env:
