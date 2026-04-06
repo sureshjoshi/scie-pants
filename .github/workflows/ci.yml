@@ -81,7 +81,7 @@ jobs:
       # required for the PANTS_SOURCE tests, which build a version of Pants that requires an external protoc
       - name: Install Protoc
         uses: arduino/setup-protoc@c65c819552d16ad3c9b72d9dfd5ba5237b9c906b # v3.0.0
-        if: ${{ matrix.os == 'macos-14' || matrix.os == 'ubuntu-22.04' || matrix.name == 'linux-arm64' }}
+        if: ${{ matrix.os == 'macos-14' || matrix.os == 'ubuntu-22.04' || matrix.name == 'ubuntu-22.04-arm' }}
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           version: 23.x
@@ -104,7 +104,7 @@ jobs:
           #
           cargo run -p package -- test --check --tools-pex-mismatch-warn
       - name: Build, Package & Integration Tests (Ubuntu)
-        if: ${{ matrix.os == 'ubuntu-22.04' || matrix.name == 'linux-arm64' }}
+        if: ${{ matrix.os == 'ubuntu-22.04' || matrix.name == 'ubuntu-22.04-arm' }}
         env:
           # Tests that scrape the github API may need this.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
