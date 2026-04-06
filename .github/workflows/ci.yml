@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - release-tet
   pull_request:
     branches:
       - main
@@ -19,7 +20,7 @@ env:
 jobs:
   org-check:
     name: Check GitHub Organization
-    if: github.repository_owner == 'pantsbuild'
+    if: github.repository_owner == 'sureshjoshi'
     runs-on: ubuntu-22.04
     steps:
       - name: Noop
