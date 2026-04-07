@@ -59,10 +59,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: macos-14
+          - os: macos-14-arm
             name: macos-14-arm64
           - os: ubuntu-22.04
-            name: ubuntu-22.04
+            name: ubuntu-22.04-x86
           - os: ubuntu-22.04-arm
             name: ubuntu-22.04-arm
           - os: windows-2022
@@ -95,7 +95,7 @@ jobs:
         run: |
           # The caches include venvs which have absolute links to Python binaries, so our system
           # should be resilient to this (see `test_pants_source_mode` in `test.rs`).
-          echo "cache_key=${{ matrix.os }}-scie-pants-v7-$(which python)" | tee -a "$GITHUB_OUTPUT"
+          echo "cache_key=${{ matrix.name }}-scie-pants-v7-$(which python)" | tee -a "$GITHUB_OUTPUT"
 
       - name: Cache Build and IT Artifacts
         uses: actions/cache@v5
@@ -106,13 +106,13 @@ jobs:
       # required for the PANTS_SOURCE tests, which build a version of Pants that requires an external protoc
       - name: Install Protoc
         uses: arduino/setup-protoc@c65c819552d16ad3c9b72d9dfd5ba5237b9c906b # v3.0.0
-        if: ${{ matrix.os != 'windows-2022' }}
+        if: ${{ matrix.name != 'windows-2022' }}
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           version: 23.x
 
       # - name: Run Integration Tests
-      #   if: ${{ matrix.os != 'windows-2022'}}
+      #   if: ${{ matrix.name != 'windows-2022'}}
       #   env:
       #     # Tests that scrape the github API may need this.
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -124,9 +124,9 @@ jobs:
       # TODO: SJ: I typically sanity test my builds in CI, but I think that's being handled in the step above - so we can probs skip this
       # TODO: SJ: Check that what I said is correct in main.rs
       # if: ${{ github.event_name == 'workflow_dispatch' }}
-      - name: Package scie-pants ${{ matrix.os }} binary
+      - name: Package scie-pants ${{ matrix.name }} binary
         id: package
-        if: ${{ matrix.os != 'windows-2022' }}
+        if: ${{ matrix.name != 'windows-2022' }}
         env:
           # So we can download PBS releases without hitting github API rate limits.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -134,12 +134,12 @@ jobs:
           cargo run -p package -- --dest-dir dist/ scie
 
           # TODO: This can't work - I should need a new artifact-name per os
-          echo "artifact-name=scie-pants-${{ matrix.os }}" >> "$GITHUB_OUTPUT"
+          echo "artifact-name=zipped-scie-pants-${{ matrix.name }}" >> "$GITHUB_OUTPUT"
           echo "artifact-path=dist/scie-pants-*" >> "$GITHUB_OUTPUT"
 
       - name: Upload artifacts
         id: upload-artifact
-        if: ${{ matrix.os != 'windows-2022' }}
+        if: ${{ matrix.name != 'windows-2022' }}
         # if: ${{ github.event_name == 'workflow_dispatch' }} # TODO: Re-enable after testing
         uses: actions/upload-artifact@v7
         with:
