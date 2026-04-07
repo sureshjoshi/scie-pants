@@ -59,14 +59,14 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: macos-14-arm
+          - os: macos-14
             name: macos-14-arm64
           - os: ubuntu-22.04
-            name: ubuntu-22.04-x86
+            name: ubuntu-22.04-x64
           - os: ubuntu-22.04-arm
-            name: ubuntu-22.04-arm
+            name: ubuntu-22.04-arm64
           - os: windows-2022
-            name: windows-2022
+            name: windows-2022-x64
 
     steps:
       - uses: actions/checkout@v6
@@ -106,13 +106,13 @@ jobs:
       # required for the PANTS_SOURCE tests, which build a version of Pants that requires an external protoc
       - name: Install Protoc
         uses: arduino/setup-protoc@c65c819552d16ad3c9b72d9dfd5ba5237b9c906b # v3.0.0
-        if: ${{ matrix.name != 'windows-2022' }}
+        if: ${{ matrix.name != 'windows-2022-x64' }}
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           version: 23.x
 
       # - name: Run Integration Tests
-      #   if: ${{ matrix.name != 'windows-2022'}}
+      #   if: ${{ matrix.name != 'windows-2022-x64'}}
       #   env:
       #     # Tests that scrape the github API may need this.
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -126,7 +126,7 @@ jobs:
       # if: ${{ github.event_name == 'workflow_dispatch' }}
       - name: Package scie-pants ${{ matrix.name }} binary
         id: package
-        if: ${{ matrix.name != 'windows-2022' }}
+        if: ${{ matrix.name != 'windows-2022-x64' }}
         env:
           # So we can download PBS releases without hitting github API rate limits.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -139,7 +139,7 @@ jobs:
 
       - name: Upload artifacts
         id: upload-artifact
-        if: ${{ matrix.name != 'windows-2022' }}
+        if: ${{ matrix.name != 'windows-2022-x64' }}
         # if: ${{ github.event_name == 'workflow_dispatch' }} # TODO: Re-enable after testing
         uses: actions/upload-artifact@v7
         with:
