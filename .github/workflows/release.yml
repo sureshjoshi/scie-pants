@@ -72,6 +72,7 @@ jobs:
   github-release:
     name: Create Github Release
     needs: run-ci
+    runs-on: ubuntu-latest
     environment: Release
     permissions:
       id-token: write
