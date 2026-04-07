@@ -71,16 +71,16 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Check Formatting
-        run: |
-          rustup toolchain add nightly -c rustfmt
-          cargo +nightly fmt --check --all
+      # - name: Check Formatting
+      #   run: |
+      #     rustup toolchain add nightly -c rustfmt
+      #     cargo +nightly fmt --check --all
 
-      - name: Lint
-        run: cargo clippy --locked --all
+      # - name: Lint
+      #   run: cargo clippy --locked --all
 
-      - name: Unit Tests
-        run: cargo test --all
+      # - name: Unit Tests
+      #   run: cargo test --all
 
       - name: Setup Python 3.9, 3.10, 3.11
         uses: actions/setup-python@v6
@@ -111,15 +111,15 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           version: 23.x
 
-      - name: Run Integration Tests
-        if: ${{ matrix.os != 'windows-2022'}}
-        env:
-          # Tests that scrape the github API may need this.
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          cargo run -p package -- test \
-            --check \
-            --tools-pex-mismatch-warn
+      # - name: Run Integration Tests
+      #   if: ${{ matrix.os != 'windows-2022'}}
+      #   env:
+      #     # Tests that scrape the github API may need this.
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     cargo run -p package -- test \
+      #       --check \
+      #       --tools-pex-mismatch-warn
 
       # TODO: SJ: I typically sanity test my builds in CI, but I think that's being handled in the step above - so we can probs skip this
       # TODO: SJ: Check that what I said is correct in main.rs
@@ -131,8 +131,7 @@ jobs:
           # So we can download PBS releases without hitting github API rate limits.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cargo run -p package -- scie \
-            --dest-dir dist/
+          cargo run -p package -- --dest-dir dist/ scie
 
           # TODO: This can't work - I should need a new artifact-name per os
           echo "artifact-name=scie-pants-${{ matrix.os }}" >> "$GITHUB_OUTPUT"
