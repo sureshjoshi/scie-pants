@@ -105,9 +105,9 @@ jobs:
             --discussion-category "Announcements"
       
       - name: Generate ${{ needs.determine-version.outputs.release-version }} build provenance attestations
-        uses: actions/attest-build-provenance@v3
+        uses: actions/attest@v4
         with:
-          subject-path: ${{ needs.run-ci.outputs.artifact-path }}
+          subject-path: dist/scie-pants-*
 
   # github-release:
   #   name: (${{ matrix.name }}) Create Github Release
