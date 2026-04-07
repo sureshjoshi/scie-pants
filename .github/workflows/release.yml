@@ -47,7 +47,7 @@ jobs:
         id: determine-tag
         run: |
           echo "release-tag=3.0.0" >> $GITHUB_OUTPUT
-          echo "release-version=v3.0.0 >> $GITHUB_OUTPUT
+          echo "release-version=v3.0.0" >> $GITHUB_OUTPUT
           echo "prerelease=3.0.0-p" >> $GITHUB_OUTPUT
           # if [[ -n "${{ github.event.inputs.tag }}" ]]; then
           #   RELEASE_TAG=${{ github.event.inputs.tag }}
