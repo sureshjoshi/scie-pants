@@ -71,7 +71,9 @@ jobs:
 
   github-release:
     name: Create Github Release
-    needs: run-ci
+    needs: 
+      - determine-tag
+      - run-ci
     runs-on: ubuntu-latest
     environment: Release
     permissions:
@@ -104,7 +106,7 @@ jobs:
             --generate-notes \
             --discussion-category "Announcements"
       
-      - name: Generate ${{ needs.determine-version.outputs.release-version }} build provenance attestations
+      - name: Generate ${{ needs.determine-tag.outputs.release-version }} build provenance attestations
         uses: actions/attest@v4
         with:
           subject-path: dist/scie-pants-*
