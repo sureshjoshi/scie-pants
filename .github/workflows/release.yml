@@ -82,6 +82,12 @@ jobs:
       contents: write
 
     steps:
+      - name: Sparse checkout
+        uses: actions/checkout@v6
+        with:
+          sparse-checkout: |
+            .
+
       - name: Download artifacts
         uses: actions/download-artifact@v8
         with:
