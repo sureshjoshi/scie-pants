@@ -92,21 +92,22 @@ jobs:
         # with:
         #   name: ${{ needs.run-ci.outputs.artifact-name }}
 
-  #     - name: Generate
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       run: |
-  #         gh release create \
-  #           ${{ needs.determine-version.outputs.release-version }} \
-  #           ${{ needs.run-ci.outputs.artifact-path }} \
-  #           --fail-on-no-commits \
-  #           --generate-notes \
-  #           --repo sureshjoshi/scratch
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create \
+            "${{ needs.determine-tag.outputs.release-tag }}" \
+            dist/scie-pants-* \
+            --title "scie-pants ${{ needs.determine-tag.outputs.release-version }}" \
+            --fail-on-no-commits \
+            --generate-notes \
+            --discussion-category "Announcements"
       
-  #     - name: Generate ${{ needs.determine-version.outputs.release-version }} build provenance attestations
-  #       uses: actions/attest-build-provenance@v3
-  #       with:
-  #         subject-path: ${{ needs.run-ci.outputs.artifact-path }}
+      - name: Generate ${{ needs.determine-version.outputs.release-version }} build provenance attestations
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-path: ${{ needs.run-ci.outputs.artifact-path }}
 
   # github-release:
   #   name: (${{ matrix.name }}) Create Github Release
