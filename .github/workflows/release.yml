@@ -109,8 +109,8 @@ jobs:
             dist/scie-pants-* \
             --title "scie-pants ${{ needs.determine-tag.outputs.release-version }}" \
             --fail-on-no-commits \
-            --generate-notes \
-            --discussion-category "Announcements"
+            --generate-notes
+            #--discussion-category "Announcements"
       
       - name: Generate ${{ needs.determine-tag.outputs.release-version }} build provenance attestations
         uses: actions/attest@v4
