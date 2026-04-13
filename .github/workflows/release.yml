@@ -69,6 +69,7 @@ jobs:
       id-token: write
       attestations: write
       contents: write
+      discussions: write
 
     steps:
       - name: Sparse checkout (so 'gh' will work)
