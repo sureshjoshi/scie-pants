@@ -1,4 +1,4 @@
-name: Scheduled audit
+name: Scheduled zizmor audit
 on:
   schedule:
   - cron: 11 8 * * *
@@ -8,19 +8,13 @@ defaults:
   run:
     shell: bash
 
+permissions: {}
+
 jobs:
-  cargo-audit:
+  zizmor-audit:
     runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v6
-
-    - name: Cargo audit (for security vulnerabilities)
-      run: |
-        cargo install cargo-audit --locked
-        cargo audit
-
-  zizmor:
-    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
     steps:
     - uses: actions/checkout@v6
       with:
