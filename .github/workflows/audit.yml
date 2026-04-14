@@ -1,0 +1,32 @@
+name: Scheduled audit
+on:
+  schedule:
+  - cron: 11 8 * * *
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  cargo-audit:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+
+    - name: Cargo audit (for security vulnerabilities)
+      run: |
+        cargo install cargo-audit --locked
+        cargo audit
+
+  zizmor:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        sparse-checkout: |
+            .
+            .github
+
+    - name: Run zizmor
+      uses: zizmorcore/zizmor-action@b1d7e1fb5de872772f31590499237e7cce841e8e # v0.5.3
