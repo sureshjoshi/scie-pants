@@ -116,6 +116,13 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           version: 23.x
 
+      - name: Install platform target
+        if: ${{ matrix.name != 'windows-2022-x64'}}
+        env:
+          TARGET: ${{ matrix.target }}
+        run: |
+          rustup target add $TARGET
+
       - name: Run Integration Tests
         if: ${{ matrix.name != 'windows-2022-x64'}}
         env:
